@@ -3,3 +3,4 @@ flask-cors
 werkzeug
 PyPDF2
 openai
+python-dotenv
