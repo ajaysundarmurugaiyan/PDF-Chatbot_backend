@@ -14,9 +14,10 @@ load_dotenv()
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'pdf'}
 N8N_WEBHOOK_URL = os.environ.get('N8N_WEBHOOK_URL', 'http://localhost:5678/webhook/upload-pdf')  # Update this URL if needed
+port = os.environ.get('PORT', 10000)
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:5173"], supports_credentials=True, methods=["GET", "POST", "OPTIONS"])  # Allow frontend origin, all methods
+CORS(app, origins=["http://localhost:5173","https://pdf-chatbot-frontend-one.vercel.app/"], supports_credentials=True, methods=["GET", "POST", "OPTIONS"])  # Allow frontend origin, all methods
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Ensure upload folder exists
@@ -118,4 +119,4 @@ def ask():
     return query()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=10000, debug=True)
