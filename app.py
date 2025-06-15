@@ -17,7 +17,7 @@ N8N_WEBHOOK_URL = os.environ.get('N8N_WEBHOOK_URL', 'http://localhost:5678/webho
 port = os.environ.get('PORT', 10000)
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:5173","https://pdf-chatbot-frontend-one.vercel.app/"], supports_credentials=True, methods=["GET", "POST", "OPTIONS"])  # Allow frontend origin, all methods
+CORS(app, origins=["http://localhost:5173","https://pdf-chatbot-frontend-one.vercel.app"], supports_credentials=True, methods=["GET", "POST", "OPTIONS"])  # Allow frontend origin, all methods
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Ensure upload folder exists
@@ -26,8 +26,10 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['POST','OPTIONS'])
 def upload_file():
+    if request.method == 'OPTIONS':
+        return '', 200
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
     file = request.files['file']
