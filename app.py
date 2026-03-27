@@ -100,7 +100,7 @@ def ask_openai(question, context):
     client = openai.OpenAI(api_key=openai_api_key)
     try:
         response = client.chat.completions.create(
-            model="gpt-4o-mini",  # Use gpt-4o, which is the latest GPT-4.1 family model
+            model="llama-3.3-70b-versatile",  # Use gpt-4o, which is the latest GPT-4.1 family model
             messages=[
                 {"role": "system", "content": "You are a helpful assistant. Answer based only on the provided context."},
                 {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"}
