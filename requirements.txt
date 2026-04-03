@@ -2,5 +2,5 @@ flask
 flask-cors
 werkzeug
 PyPDF2
-openai
+groq
 python-dotenv
