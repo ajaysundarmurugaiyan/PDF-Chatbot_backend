@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import json
 import PyPDF2
-import openai
+from groq import Groq
 from dotenv import load_dotenv
 
 # Load environment variables from .env
@@ -70,7 +70,7 @@ def query():
     for page, lines in pdf_content.items():
         all_lines.extend(lines)
     context = '\n'.join(all_lines)
-    answer = ask_openai(question, context)
+    answer = ask_groq(question, context)
     return jsonify({'answer': answer})
 
 # --- Helper functions ---
@@ -87,20 +87,19 @@ def extract_pdf_to_json(pdf_path):
             pdf_json[f'page_{i+1}'] = lines
     return pdf_json
 
-def ask_openai(question, context):
+def ask_groq(question, context):
     """
-    Uses OpenAI GPT-4o (or GPT-4.1 if available) to answer the question based on the provided context.
-    Compatible with openai>=1.0.0.
+    Uses Groq to answer the question based on the provided context.
     """
-    import openai
+    from groq import Groq
     import os
-    openai_api_key = os.environ.get('OPENAI_API_KEY')
-    if not openai_api_key:
-        return "OpenAI API key not set."
-    client = openai.OpenAI(api_key=openai_api_key)
+    groq_api_key = os.environ.get('GROQ_API_KEY')
+    if not groq_api_key:
+        return "Groq API key not set."
+    client = Groq(api_key=groq_api_key)
     try:
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",  # Use gpt-4o, which is the latest GPT-4.1 family model
+            model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant. Answer based only on the provided context."},
                 {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"}
@@ -110,7 +109,7 @@ def ask_openai(question, context):
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
-        return f"Error querying OpenAI: {e}"
+        return f"Error querying Groq: {e}"
 
 
 @app.route('/ask', methods=['POST', 'OPTIONS'])
