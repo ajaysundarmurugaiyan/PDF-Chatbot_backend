@@ -2,8 +2,8 @@ import os
 from dotenv import load_dotenv
 
 def load_environment():
-    load_dotenv()
-    # Optionally print or check if the key is loaded
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    load_dotenv(os.path.join(basedir, '.env'))
     if os.environ.get('GROQ_API_KEY'):
         print('GROQ_API_KEY loaded successfully')
     else:
