@@ -95,7 +95,7 @@ def ask_groq(question, context):
     """
     from groq import Groq
     import os
-    groq_api_key = os.environ.get('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')
+    groq_api_key = os.environ.get('GROQ-API-KEY')
     if not groq_api_key:
         return "Groq API key not set."
     client = Groq(api_key=groq_api_key)
